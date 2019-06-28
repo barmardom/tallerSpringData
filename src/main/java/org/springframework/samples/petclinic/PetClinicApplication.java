@@ -27,6 +27,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.samples.petclinic.repository.SpecialityRepository;
 import org.springframework.samples.petclinic.repository.VetRepository;
+import org.springframework.samples.petclinic.service.PetClinicService;
+import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.model.Vet;
 
 /**
@@ -37,29 +39,50 @@ import org.springframework.samples.petclinic.model.Vet;
  */
 @SpringBootApplication
 public class PetClinicApplication {
-	@Autowired
-	VetRepository vetRepository;
+	//@Autowired
+	//VetRepository vetRepository;
 	
+	@Autowired
+	PetClinicService petClinicService;
+
 	private static final Logger log = LoggerFactory.getLogger(PetClinicApplication.class);
 
-    public static void main(String[] args) throws Exception {
-        SpringApplication.run(PetClinicApplication.class, args);
-    }
-    
-    @Bean
+	public static void main(String[] args) throws Exception {
+		SpringApplication.run(PetClinicApplication.class, args);
+	}
+
+	@Bean
 	public CommandLineRunner demoVetRepository(VetRepository vetRepository, SpecialityRepository specialityRepository) {
 		return (args) -> {
 			log.info("*****************************************************");
 			log.info("BOOTCAMP - Spring y Spring Data - vetRepository");
 			log.info("*****************************************************");
-
-			List<Vet> vets = vetRepository.findAll();
 			
-			for(Vet vet : vets) {
+			String firstName = "Bartolome";
+			String lastName = "Marquez";
+			String specialtyName = "radiology";
+
+			List<Vet> allVets = petClinicService.findAll();
+			List<Vet> specialtyVets = petClinicService.findBySpecialityName(specialtyName);
+			
+
+			petClinicService.altaVeteriario(firstName, lastName, specialtyName);
+			
+			
+			log.info("VETS CON UNA DETERMINADA ESPECIALIDAD");
+			for (Vet vet : specialtyVets) {
 				log.info(vet.toString());
 			}
 			
+			log.info("TODOS LOS VETS");
+			for (Vet vet : allVets) {
+				log.info(vet.toString());
+			}
+		
+
+
 		};
 	}
-    
+
+
 }
